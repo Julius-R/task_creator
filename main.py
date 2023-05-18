@@ -1,5 +1,5 @@
 from taskList import TaskList
-from helpers import choose_option, get_user_input_str
+from helpers import choose_option, get_user_selection
 import json
 
 
@@ -16,7 +16,9 @@ def get_init_details():
             print(tasks)
             return {"tasks": TaskList(tasks), "user": user}
     except FileNotFoundError:
-        return {"tasks": TaskList(), "user": get_user_input_str("Enter your name")}
+        print("Hello, what is your name?")
+        name = get_user_selection("str")
+        return {"tasks": TaskList(), "user": name}
 
 
 def save_progress(tasks, user):
@@ -29,14 +31,10 @@ def save_progress(tasks, user):
 def main():
     details = get_init_details()
     tasks, user = details.values()
+    OPTIONS_LIST = ("View Tasks", "Add Task", "Edit Task", "Quit")
     print(f"\nHello {user}!")
     while True:
-        try:
-            print("\nWhat would you like to do?")
-            user_choice = choose_option()
-        except:
-            print("Some error occured")
-        match user_choice:
+        match choose_option(OPTIONS_LIST):
             case 1:
                 tasks.view_tasks()
             case 2:
@@ -46,7 +44,8 @@ def main():
             case 4:
                 save_progress(tasks, user)
                 break
-    print("Loop has ended!")
+
+    print("Loop has ended, goodbye!")
 
 
 main()

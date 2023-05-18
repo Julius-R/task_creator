@@ -1,5 +1,5 @@
 from task import Task
-from helpers import get_user_input_str, get_user_value_int
+from helpers import get_user_selection, choose_option
 from typing import List
 
 
@@ -12,16 +12,17 @@ class TaskList:
                 self.tasks.append(Task(task, inProgress, isCompleted))
 
     def __add_task(self):
-        task = get_user_input_str("\nEnter task details")
+        print("\nEnter task details")
+        task = get_user_selection("str")
         self.tasks.append(Task(task))
 
     def add_task_loop(self):
         while True:
             self.__add_task()
-            user_selection = get_user_input_str(
-                "\nDo you want to add another task? \nPress Enter for yes, or 'n' for no"
-            )
+            print("\nTask added!\nDo you want to add another task? \nPress Enter for yes, or 'n' for no")
+            user_selection = get_user_selection("str")
             if user_selection.lower() == "n":
+                print("\nReturning to main menu! \n")
                 break
 
     def view_tasks(self):
@@ -35,27 +36,29 @@ class TaskList:
                 print("-" * 10)
 
     def __select_task(self):
-        print("Please select a task to edit \n")
-        for index, task in enumerate(self.tasks):
-            print(f"{index + 1} - {task.get_task_name()}")
-        user_selection = get_user_value_int()
-        return self.tasks[user_selection]
+        user_selection = choose_option(self.tasks)
+        return self.tasks[user_selection - 1]
 
     def edit_task(self):
-        options = ("Delete", "Start", "Mark Complete")
+        TASK_OPTIONS = ("Delete", "Start/Pause", "Mark Complete", "Cancel")
         task = self.__select_task()
-        print(f"Editing {task.get_task_name()}")
-        print("Options")
-        for index, option in enumerate(options):
-            print(f"{index + 1} - {option}")
-        user_selection = get_user_value_int()
+        print("\nCurrently Editing:")
+        task.get_details()
+        print("\nOptions\n")
+        user_selection = choose_option(TASK_OPTIONS)
         match user_selection:
             case 1:
                 self.tasks.remove(task)
+                print("\nTask Deleted! \n")
             case 2:
                 task.update_progress()
+                print("\nTask Progress Updated! \n")
             case 3:
                 task.mark_completed()
+                print("\nTask Marked Completed! \n")
+            case 4:
+                print("\nReturning to main menu! \n")
+                return
 
     def get_tasks(self):
         return self.tasks

@@ -20,6 +20,9 @@ class Task:
         elif self.inProgress:
             status = "In Progress"
         else:
-            status = "Not Started"
+            status = "Not Completed"
 
-        print(f"""Task: {self.task} \nStatus: {status}""")
+        print(f"""\nTask: {self.task} \nStatus: {status}""")
+
+    def __repr__(self):
+        return self.task
